@@ -20,37 +20,138 @@
     <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
     
     
-    <script>
-            
-    	(function($) {
-	  	
-			 $(function() {
-			 	validator = $("form.validate").validate( {
-	                errorClass: "help-inline",
-                    highlight: function (element, errorClass, validClas) { 
-                    	$(element).parents("div.control-group").addClass("error"); 
-                    }, 
-                    unhighlight: function (element, errorClass, validClass) { 
-                    	$(element).parents(".error").removeClass("error"); 
-                    }, 
-                    errorElement: 'p'
-	            } );
-			 	
-				$('input[id$="submit"]').click( function(){
-                if (validator.form()) {
-                    return true;
-                } else {
-                    return false;
-                }
-            });
-				
+<script>
+        
+	(function($) {
+
+		$(function() {
+
+			
+
+			function setNames() {
+				var subform, add, proto, new_item;
+
+				add = $(this);
+				subform = add.closest('.ryform-sub');
+				proto = $('.ryform-sub-group.hide', subform);
+				new_item = proto.clone();
+
+				$('.rywidget', new_item).each(function() {
+					var i, obj, current_name, original_name;
+					obj = $(this);
+					current_name = obj.attr('name');
+					if (current_name.indexOf('--') > 0) {
+						original_name = current_name.substring(0, current_name.indexOf('--'));
+					} else {
+						original_name = current_name;
+					}
+					i = $('.ryform-sub-group:visible', subform).length+1;
+					obj.attr('name',original_name+'--'+i).attr('id',original_name+'--'+i);
+				});
+
+				add.before(new_item);
+				new_item.removeClass('hide');
+				new_item.hide();
+				new_item.slideDown(200);
+			}
+
+			// Setup validator with correct markup
+			validator = $("form.validate").validate( {
+				errorClass: "help-inline",
+				highlight: function (element, errorClass, validClas) { 
+					$(element).closest("div.control-group").addClass("error"); 
+				}, 
+				unhighlight: function (element, errorClass, validClass) { 
+					$(element).closest(".error").removeClass("error"); 
+				}, 
+				errorElement: 'p'
 			});
-		})(jQuery);
-    
-    </script>
+
+			// Prevent default and force validate when submit is clicked
+			$('input[id$="submit"]').click( function(){
+				if (validator.form()) {
+					return true;
+				} else {
+					return false;
+				}
+			});
+
+			// Add new sub item
+			$('.ryform-sub-add').click(function () {
+
+				var subform, add, proto, new_item;
+
+				add = $(this);
+				subform = add.closest('.ryform-sub');
+				proto = $('.ryform-sub-group.hide', subform);
+				new_item = proto.clone();
+
+				$('.rywidget', new_item).each(function() {
+					var i, obj, current_name, original_name;
+					obj = $(this);
+					current_name = obj.attr('name');
+					if (current_name.indexOf('--') > 0) {
+						original_name = current_name.substring(0, current_name.indexOf('--'));
+					} else {
+						original_name = current_name;
+					}
+					i = $('.ryform-sub-group:visible', subform).length+1;
+					obj.attr('name',original_name+'--'+i).attr('id',original_name+'--'+i);
+				});
+
+				add.before(new_item);
+				new_item.removeClass('hide');
+				new_item.hide();
+				new_item.slideDown(200);
+
+				return false;
+
+			});
+
+			// Remove sub item
+			$('.ryform-sub-group .close').live('click', function () {
+
+				var others = $(this).parents('.ryform-sub').find('.ryform-sub-group:visible');
+				$(this).closest('.ryform-sub-group').remove();
+
+				others.each(function(index) {
+					var i = index + 1;
+					$(this).find('.rywidget').each(function() {
+						var j, obj, current_name, original_name;
+						obj = $(this);
+						current_name = obj.attr('name');
+						if (current_name.indexOf('--') > 0) {
+							original_name = current_name.substring(0, current_name.indexOf('--'));
+						} else {
+							original_name = current_name;
+						}
+						obj.attr('name',original_name+'--'+i).attr('id',original_name+'--'+i);
+					});
+				});
+
+				return false;
+
+			});
+
+		});
+	})(jQuery);
+
+</script>
     <style>
     
-    
+    .ryform-sub-group {
+    	border: 1px solid #EEE;
+    	background-color: white;
+    	margin: 0 0 1em 0;
+    	padding: 1em 1em 0 1em;
+    	position: relative;
+    }
+    .ryform-sub-group .close {
+    	float: left;
+    	left: 10px;
+    	top: 10px;
+    	position: absolute;
+    }
     
     </style>
 	
@@ -65,11 +166,7 @@
 				</div>
 			</apex:outputPanel>
 			
-			<apex:repeat value="{!form.field_list}" var="field">
-				
-				<apex:outputText escape="false" value="{!field.rendered}" />
-				
-			</apex:repeat>
+			<apex:outputText escape="false" value="{!form.rendered}" />
 			
 			<div class="form-actions">
 				<apex:commandButton styleClass="btn btn-primary" action="{!submit}" value="Submit" id="submit"/>

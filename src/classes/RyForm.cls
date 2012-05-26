@@ -1,115 +1,19 @@
-public with sharing class RyForm {
-	
-	public class RyField {
-		
-		public String name { get; set; }
-		public String label { get; set; }
-		public String description { get; set; }
-		public String data_type { get; set; }
-		public RyWidget.Base widget { get; set; }
-		public Boolean required { get; set; }
-		public String default_value { get; set; }
-		public String validator { get; set; }
-		public list<String> validators { get; set; }
-		public list<RyValidator.Base> ryvalidators { get; set; }
-		public String error { get; set; }
-		
-		// Rules (length for text fields, values for numbers)
-		public Integer max;
-		
-		public String rendered {
-			get {
-				return render();
-			}
-			set;	
-		}
-		
-		public void setup() {
-			if (this.name == null) this.name = '';
-			if (this.label == null) this.label = '';
-			if (this.description == null) this.description = '';
-			if (this.data_type == null) this.data_type = 'text';
-			if (this.widget == null) this.widget = new RyWidget.TextLine();
-			if (this.required == null) this.required = true;
-			if (this.default_value == null) this.default_value = '';
-			if (this.validator == null) this.validator = '';
-			if (this.validators == null) this.validators = new list<string>();
-			
-			if (this.error == null) this.error = '';
-			
-		}
-		
-		public RyField(Map<String, String> struct) {
-			
-			for (String k : struct.keySet()) {
-				
-				if (k == 'name') {
-					this.name = struct.get(k);
-				}
-				
-				if (k == 'label') {
-					this.label = struct.get(k);
-				}
-				
-				if (k == 'description') {
-					this.description = struct.get(k);
-				}
-				
-				if (k == 'data_type') {
-					this.data_type = struct.get(k);
-				}
-				
-				if (k == 'required') {
-					String value = struct.get(k);
-					if (value == 'true' || value == 'false') {
-						this.required = Boolean.valueOf(struct.get(k));
-					}
-				}
-				
-				if (k == 'default_value') {
-					this.default_value = struct.get(k);
-				}
-				
-				if (k == 'validator') {
-					this.validator = struct.get(k);
-				}
-				
-				
-			}
-			
-			setup();
-			
-		}
-		
-		public String render() {
-			
-			return '<div class="control-group '+(this.error != null && this.error != '' ? 'error' : '')+'"><label class="control-label" for="'+this.name+'">'+this.label+'</label><div class="controls">'+this.widget.render(this.name, this.description, this.default_value, this.error)+'</div></div>';
-			
-		}
-		
-		public void widgitify() {
-			
-			if (this.widget != null) {
+public virtual class RyForm {
 
-				String widget_json = JSON.serialize(this.widget);
-				JSONParser parser = JSON.createParser(widget_json);
-				Type widget_class;
-				if (!this.widget.type.contains('.')) {
-        			widget_class = Type.forName('RyWidget.'+this.widget.type);
-				}
-        		this.widget = (RyWidget.Base)parser.readValueAs(widget_class);
-				
-			}
-			
+	public class RyFieldset {
+		public String name { get; set; }
+		public list<String> fields { get; set; }
+
+		public RyFieldset() {
+			fields = new List<String>();
 		}
-		
 	}
 	
-	
-	public list<RyField> field_list { get; set; }
-	
 	public list<RyModel.ModelSchema> models;
-	
+	public boolean auto_model;
+	public String sf_object;
+	public String action;
+
 	public map<string,string> errors { get; set; }
 	
 	public boolean has_errors {
@@ -117,9 +21,14 @@ public with sharing class RyForm {
 			return !errors.isEmpty();
 		}
 	}
+
+	// Fieldsets, right now implemented as list<string> of list<string>
+	public List<RyFieldset> fieldsets { get; set; }
 	
+	// Map of parameters, i.e. raw form input values, that are passed into the form
 	public map<string,string> params { get; set; }
 	
+	// Map of validators that should automatically be applied to fields of a certain type
 	public static map<string,list<string>> data_type_validators {
 		get {
 			if (data_type_validators == null) {
@@ -130,98 +39,105 @@ public with sharing class RyForm {
 		}
 	}
 	
-	public RyForm() {
-		field_list = new list<RyField>();
-		errors = new map<string, string>();
-		models = new list<RyModel.ModelSchema>();
-		params = new map<string, string>();
+	// The list of fields on our form
+	public list<RyField> fields { get; set; }
+	
+	// Prefix to apply to field names when they are rendered to avoid conflicts with other forms
+	public String namespace { get; set; }
+	public String suffix { get; set; }
+
+	public String rendered {
+		Get {
+			return render();
+		}
 	}
 	
-	public void setup() {
+
+	public RyForm() {
+		// Constructor.  Simply sets up base properties.
+		set_defaults();
+	}
+
+
+	public virtual void set_defaults() {
+		if (fields == null) fields = new list<RyField>();
+		if (errors == null) errors = new map<string, string>();
+		if (models == null) models = new list<RyModel.ModelSchema>();
+		if (params == null) params = new map<string, string>();
+		if (fieldsets == null) fieldsets = new List<RyFieldset>();
+		if (namespace == null) namespace = '';
+		if (suffix == null) suffix = '';
+	}
+	
+
+	public virtual void add_field(RyField field) {
+		// Method to add a new field to the list. Prevents duplicate names.
+
+		if (get_field(field.name) == null) {
+			fields.add(field);
+		}
+	}
+	public virtual void add_field(String name, String label) {
+		// Method to create then add a field.
+
+		RyField field = new RyField();
+		field.name = name;
+		field.label = label;
+		add_field(field);
+	}
+	
+	
+	public virtual RyField get_field(String name) {
+		// Method to get a field by name
+
+		if (!fields.isEmpty()) {
+			for (RyField field : fields) {
+				if (field.name == name) {
+					return field;
+				}
+			}
+		}
+		return null;
+	}
+	
+
+	public virtual void setup() {
+		// This method sets up the form, including validation and errors.
+
 		// Reset errors
 		errors = new map<string,string>();
 		
-		for (RyField field : field_list) {
+		for (RyField field : fields) {
 			
+			//Namespace
+			field.namespace = this.namespace;
+			field.suffix = this.suffix;
+
 			// Set current value
-			field.widget.current_value = field.widget.extract(params);
+			field.current_value = field.widget.extract(params);
 			
-			// Setup validators
-			Set<string> validator_set = new set<string>();
-			validator_set.addAll(field.validators);
-			
-			//  - Required fields
-			if (field.required) {
-				validator_set.add('Required');
-			}
-			
-			//  - For data types
-			if (field.data_type != null) {
-				if (data_type_validators.containsKey(field.data_type)) {
-					validator_set.addAll(data_type_validators.get(field.data_type));
-				}
-			}
-			
-			//  - Manually added
-			if (field.validator != null && field.validator != '') {
-				validator_set.add(field.validator);
-			}
-			
-			field.validators = new list<string>();
-			field.validators.addAll(validator_set);
-			field.ryvalidators = new list<RyValidator.Base>();
-			
-			//  - Max Length
-			if (field.max > 0) {
-				RyValidator.maxLength max_length = new RyValidator.maxLength();
-				max_length.max = field.max;
-				max_length.setup();
-				field.ryvalidators.add(max_length);
-			}
-			
-			for (String v_string : field.validators) {
-				JSONParser parser = JSON.createParser('{}');
-				Type vClass;
-				if (!v_string.contains('.')) {
-        			vClass = Type.forName('RyValidator.'+v_string);
-				}
-        		RyValidator.Base validator = (RyValidator.Base)parser.readValueAs(vClass);
-        		validator.setup();
-        		field.ryvalidators.add(validator);
-        		if (validator.css_class != null && validator.css_class != '') {
-        			field.widget.css_classes.add(validator.css_class);
-        		}
-			}
-			//for (String vd)
-			//field.widget.css_classes.addAll()
+			field.setup_validators();
 		}
 	}
 	
-	public Boolean validate(map<string,string> params) {
-		
+
+	public virtual Boolean validate() {
+		// Run all validators on all fields and fill map of field name to error message.
+
 		errors = new map<string,string>();
 		
 		// Run validation
-		for (RyField field : field_list) {
-			String value = field.widget.extract(params);
+		for (RyField field : fields) {
 			
-			for (RyValidator.Base validator : field.ryvalidators) {
-        		
-        		
-        		// Run validator
-        		validator.validate(value, params);
-				
-        		if (!validator.valid) {
-        			field.error = validator.message;
-        			errors.put(field.name, validator.message);
-        		}
-					
-			}
-			
-			
+			String error = field.validate(this.params);
+
+			if (error != null && error != '') {
+    			errors.put(field.name, error);
+    		}
+    		
 		}
 		
-		for (RyField field : field_list) {
+		for (RyField field : fields) {
 			if (!errors.containsKey(field.name)) {
 				field.error = '';
 			}
@@ -233,6 +149,128 @@ public with sharing class RyForm {
 		}
 		return true;
 	
+	}
+	
+	
+	public virtual List<RyModel.ProcessedResponse> process() {
+		// Shortcut method to validate and process all models
+		
+		list<RyModel.ProcessedResponse> responses = new list<RyModel.ProcessedResponse>();
+
+		if (this.validate()) {
+
+			Boolean status = true;
+			
+			if (this.auto_model == true && this.sf_object != null) {
+				responses.add(RyModel.processModel(this.params, this.generate_model()));
+			} else {
+				if (!this.models.isEmpty()) {
+					for (RyModel.ModelSchema model : this.models) {
+						responses.add( RyModel.processModel(params, model) );
+					}
+				
+				}
+			}
+			return responses;
+			
+		}
+		return null;
+		
+	}
+
+
+	public virtual String render() {
+
+		String form_tmpl = '##FIELDS## ##FIELDSETS##';
+		String fieldset_tmpl = '<fieldset>##LEGEND## ##FIELDS##</fieldset>';
+		String legend_tmpl = '<legend>##NAME##</legend>';
+		String output = form_tmpl;
+		String fieldsets_output = '';
+		String fields_output = '';
+		Set<String> rendered_fields = new Set<String>();
+
+		// Fieldsets
+		if (!fieldsets.isEmpty() && !fields.isEmpty()) {
+
+			for (RyFieldset fieldset : fieldsets) {
+
+				if (fieldset.fields.isEmpty()) {
+					continue;
+				}
+
+				String fieldset_output = fieldset_tmpl;
+				String legend_output = legend_tmpl;
+				String field_output = '';
+
+				// Legend
+				if (fieldset.name != '' && fieldset.name != null) {
+					legend_output = legend_output.replace('##NAME##', fieldset.name);
+				} else {
+					legend_output = '';
+				}
+				fieldset_output = fieldset_output.replace('##LEGEND##', legend_output);
+
+				// Fields
+				for (String field_name : fieldset.fields) {
+					if (!rendered_fields.contains(field_name)) {
+						field_output += get_field(field_name).render();
+						rendered_fields.add(field_name);
+					}
+				}
+				fieldset_output = fieldset_output.replace('##FIELDS##', field_output);
+
+				fieldsets_output += fieldset_output;
+			}
+
+		}
+
+		output = output.replace('##FIELDSETS##', fieldsets_output);
+
+		// Unallocated Fields
+		if (!fields.isEmpty()) {
+			
+			for (RyField field : fields) {
+				Boolean render_this = true;
+				for (String field_name : rendered_fields) {
+					if (field_name == field.name) {
+						render_this = false;
+					}
+				}
+				if (render_this) {
+					fields_output += field.render();
+				}
+			}
+
+		}
+
+		output = output.replace('##FIELDS##', fields_output);
+
+		return output;
+
+	}
+
+	private virtual RyModel.ModelSchema generate_model() {
+		RyModel.ModelSchema schema = new RyModel.ModelSchema();
+		schema.sf_object = this.sf_object;
+		if (this.action != null) {
+			schema.action = this.action;
+		}
+		Boolean has_id = false;
+		for (RyField field : this.fields) {
+			if (field.sf_field == null) {
+				field.sf_field = field.name;
+			}
+			if (field.sf_field != null) {
+				schema.addNode(field);
+			}
+			if (field.sf_field == 'Id') {
+				has_id = true;
+			}
+		}
+		if (!has_id) {
+			schema.addNode('Id');
+		}
+		return schema;
 	}
 
 }
