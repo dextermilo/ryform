@@ -1,0 +1,85 @@
+<apex:page controller="RyModelTestController" standardStylesheets="false" showHeader="false">
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<link href="http://twitter.github.com/bootstrap/assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="http://twitter.github.com/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet" />
+    
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-alert.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-scrollspy.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-button.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-collapse.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-carousel.js"></script>
+    <script src="http://twitter.github.com/bootstrap/assets/js/bootstrap-typeahead.js"></script>
+    
+    <script src="https://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js"></script>
+    
+    
+    <script>
+            
+    	(function($) {
+	  	
+			 $(function() {
+			 	validator = $("form.validate").validate( {
+	                errorClass: "help-inline",
+                    highlight: function (element, errorClass, validClas) { 
+                    	$(element).parents("div.control-group").addClass("error"); 
+                    }, 
+                    unhighlight: function (element, errorClass, validClass) { 
+                    	$(element).parents(".error").removeClass("error"); 
+                    }, 
+                    errorElement: 'p'
+	            } );
+			 	
+				$('input[id$="submit"]').click( function(){
+                if (validator.form()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            });
+				
+			});
+		})(jQuery);
+    
+    </script>
+    <style>
+    
+    
+    
+    </style>
+	
+	<div class="container">
+		
+		<h1 style="margin: 2em 0 1em 0">RyForm Proof of concept</h1>
+		<apex:form id="ryform" styleClass="form-horizontal validate">
+		
+			<apex:outputPanel rendered="{!form.has_errors}">
+				<div class="alert alert-error">
+  				    Please correct the indicated errors.
+				</div>
+			</apex:outputPanel>
+			
+			<apex:repeat value="{!form.field_list}" var="field">
+				
+				<apex:outputText escape="false" value="{!field.rendered}" />
+				
+			</apex:repeat>
+			
+			<div class="form-actions">
+				<apex:commandButton styleClass="btn btn-primary" action="{!submit}" value="Submit" id="submit"/>
+				
+			</div>
+		
+		</apex:form>
+		
+	</div>
+	
+	
+	
+</apex:page>
