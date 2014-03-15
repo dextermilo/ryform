@@ -1,181 +1,181 @@
 @isTest
 public class RyFormTests {
-	/* Tests */
-	
-	// helper
-	private static RyForm setupTestForm() {
-		RyForm form = new RyForm();
-		
-		RyField field = new RyField();
-		field.name = 'spam';
-		field.label = 'Test';
-		field.description = 'A test field.';
-		field.defaultValue = 'value';
-		field.validator = 'isURL';
-		field.max = 40;
-		
-		RyField field2 = new RyField();
-		field2.name = 'number';
-		field2.label = 'Number';
-		field2.dataType = 'number';
-		
-		form.addField(field);
-		form.addField(field2);
-		
-		Map<String, String> params = new Map<String, String>();
-		params.put('spam', 'floogle');
-		params.put('number', 'NaN');
-		form.params = params;
+    /* Tests */
+    
+    // helper
+    private static RyForm setupTestForm() {
+        RyForm form = new RyForm();
+        
+        RyField field = new RyField();
+        field.name = 'spam';
+        field.label = 'Test';
+        field.description = 'A test field.';
+        field.defaultValue = 'value';
+        field.validator = 'isURL';
+        field.max = 40;
+        
+        RyField field2 = new RyField();
+        field2.name = 'number';
+        field2.label = 'Number';
+        field2.dataType = 'number';
+        
+        form.addField(field);
+        form.addField(field2);
+        
+        Map<String, String> params = new Map<String, String>();
+        params.put('spam', 'floogle');
+        params.put('number', 'NaN');
+        form.params = params;
 
-		RyModel.ModelSchema model = new RyModel.ModelSchema();
-		model.sfObject = 'Account';
-		model.addNode('spam', new RyModel.SchemaNode('Name'));
+        RyModel.ModelSchema model = new RyModel.ModelSchema();
+        model.sfObject = 'Account';
+        model.addNode('spam', new RyModel.SchemaNode('Name'));
 
-		form.models.add(model);
+        form.models.add(model);
 
-		return form;
-	}
-	
-	@isTest
-	static void test_setup() {
-		RyForm form = setupTestForm();
-		
-		form.setup();
-		
-		// Test Set current value
-		system.assertEquals('floogle', form.fields[0].currentValue);
-		
-		// Test Setup validators
-		Boolean req = false;
-		Boolean num = false;
-		Boolean man = false;
-		
-		for (RyField fld : form.fields) {
-			for (RyValidator.Base v : fld.ryValidators) {
-				if (v.cssClass == 'required') req = true;
-				if (v.cssClass == 'number') num = true;
-				if (v.cssClass == 'url') man = true;
-			}
-		}
-		
-		system.assert(req);
-		system.assert(num);
-		system.assert(man);
-		
-	}
-	
-	@isTest
-	static void test_validate() {
-		RyForm form = setupTestForm();
-		
-		form.setup();
-		
-		Boolean valid = form.validate();
-		
-		system.assert(!valid);
-		system.assert(form.has_errors);
-		
-		form.params.put('spam', 'http://www.google.com');
-		form.params.put('number', '100');
-		
-		form.setup();
-		
-		valid = form.validate();
-		
-		system.assert(valid);
-		
-	}
-	
-	@isTest
-	static void test_getField() {
-		RyForm form = setupTestForm();
-		
-		system.assert(form.getField('spam') != null);
-	}
+        return form;
+    }
+    
+    @isTest
+    static void test_setup() {
+        RyForm form = setupTestForm();
+        
+        form.setup();
+        
+        // Test Set current value
+        system.assertEquals('floogle', form.fields[0].currentValue);
+        
+        // Test Setup validators
+        Boolean req = false;
+        Boolean num = false;
+        Boolean man = false;
+        
+        for (RyField fld : form.fields) {
+            for (RyValidator.Base v : fld.ryValidators) {
+                if (v.cssClass == 'required') req = true;
+                if (v.cssClass == 'number') num = true;
+                if (v.cssClass == 'url') man = true;
+            }
+        }
+        
+        system.assert(req);
+        system.assert(num);
+        system.assert(man);
+        
+    }
+    
+    @isTest
+    static void test_validate() {
+        RyForm form = setupTestForm();
+        
+        form.setup();
+        
+        Boolean valid = form.validate();
+        
+        system.assert(!valid);
+        system.assert(form.has_errors);
+        
+        form.params.put('spam', 'http://www.google.com');
+        form.params.put('number', '100');
+        
+        form.setup();
+        
+        valid = form.validate();
+        
+        system.assert(valid);
+        
+    }
+    
+    @isTest
+    static void test_getField() {
+        RyForm form = setupTestForm();
+        
+        system.assert(form.getField('spam') != null);
+    }
 
-	@isTest
-	static void test_addField() {
-		RyForm form = setupTestForm();
-		form.addField('count', 'The Count');
+    @isTest
+    static void test_addField() {
+        RyForm form = setupTestForm();
+        form.addField('count', 'The Count');
 
-		system.assert(form.getField('count') != null);
+        system.assert(form.getField('count') != null);
 
-	}
+    }
 
-	@isTest
-	static void test_render() {
-		RyForm form = setupTestForm();
-		system.assert(form.rendered.contains('spam') && form.rendered.contains('number'));
-	}
+    @isTest
+    static void test_render() {
+        RyForm form = setupTestForm();
+        system.assert(form.rendered.contains('spam') && form.rendered.contains('number'));
+    }
 
-	@isTest
-	static void test_fieldsets() {
-		RyForm form = setupTestForm();
+    @isTest
+    static void test_fieldsets() {
+        RyForm form = setupTestForm();
 
-		RyForm.RyFieldset fieldset_no_name = new RyForm.RyFieldset();
-		fieldset_no_name.fields.add('number');
+        RyForm.RyFieldset fieldset_no_name = new RyForm.RyFieldset();
+        fieldset_no_name.fields.add('number');
 
-		form.fieldsets.add(fieldset_no_name);
+        form.fieldsets.add(fieldset_no_name);
 
-		RyForm.RyFieldset fieldset_with_name = new RyForm.RyFieldset();
-		fieldset_with_name.name = 'Food';
-		fieldset_with_name.fields.add('spam');
+        RyForm.RyFieldset fieldset_with_name = new RyForm.RyFieldset();
+        fieldset_with_name.name = 'Food';
+        fieldset_with_name.fields.add('spam');
 
-		form.fieldsets.add(fieldset_with_name);
+        form.fieldsets.add(fieldset_with_name);
 
-		form.fieldsets.add(new RyForm.RyFieldset());
+        form.fieldsets.add(new RyForm.RyFieldset());
 
-		form.setup();
+        form.setup();
 
-		system.assert(form.rendered.contains('Food'));
-		system.assert(form.rendered.indexOf('spam') > form.rendered.indexOf('number'));
-	}
+        system.assert(form.rendered.contains('Food'));
+        system.assert(form.rendered.indexOf('spam') > form.rendered.indexOf('number'));
+    }
 
-	@isTest
-	static void test_process() {
-		RyForm form = setupTestForm();
+    @isTest
+    static void test_process() {
+        RyForm form = setupTestForm();
 
-		form.setup();
+        form.setup();
 
-		List<RyModel.ProcessedResponse> responses = form.process();
+        List<RyModel.ProcessedResponse> responses = form.process();
 
-		system.assertEquals(null, responses);
+        system.assertEquals(null, responses);
 
-		Map<String, String> params = new Map<String, String>();
-		params.put('spam', 'http://www.google.com');
-		params.put('number', '10');
-		form.params = params;
+        Map<String, String> params = new Map<String, String>();
+        params.put('spam', 'http://www.google.com');
+        params.put('number', '10');
+        form.params = params;
 
-		form.setup();
+        form.setup();
 
-		responses = form.process();
-		
-		system.assert(responses[0].obj.Id != null);
+        responses = form.process();
+        
+        system.assert(responses[0].obj.Id != null);
 
-	}
+    }
 
-	@isTest
-	static void test_auto_model() {
+    @isTest
+    static void test_auto_model() {
 
-		RyForm form = new RyForm();
-		form.sfObject = 'Account';
-		form.auto_model = true;
-		form.action = 'upsert';
+        RyForm form = new RyForm();
+        form.sfObject = 'Account';
+        form.auto_model = true;
+        form.action = 'upsert';
 
-		form.addField('Name', 'Name');
-		form.addField('Description', 'Description');
+        form.addField('Name', 'Name');
+        form.addField('Description', 'Description');
 
-		Map<String, String> params = new Map<String, String>{
-			'Name' => 'ACME Sales',
-			'Description' => 'A sales company'
-		};
+        Map<String, String> params = new Map<String, String>{
+            'Name' => 'ACME Sales',
+            'Description' => 'A sales company'
+        };
 
-		form.params = params;
+        form.params = params;
 
-		form.setup();
+        form.setup();
 
-		List<RyModel.ProcessedResponse> responses = form.process();
+        List<RyModel.ProcessedResponse> responses = form.process();
 
-		system.assert(responses[0].success);
-	}
+        system.assert(responses[0].success);
+    }
 }

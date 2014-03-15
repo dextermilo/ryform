@@ -1,22 +1,22 @@
 @isTest
 public class RySubFormTests {
 
-	/* Tests */
+    /* Tests */
 
-	@isTest
-	static void test_subform() {
+    @isTest
+    static void test_subform() {
 
-		RySubForm subform = new RySubForm();
+        RySubForm subform = new RySubForm();
 
-		RyField fld = new RyField();
-		fld.name = 'test';
+        RyField fld = new RyField();
+        fld.name = 'test';
 
-		system.assertEquals('', subform.namespace);
+        system.assertEquals('', subform.namespace);
 
-		subform.parentField = fld;
+        subform.parentField = fld;
 
-		system.assertEquals(fld.name, subform.namespace);
+        system.assertEquals(fld.name, subform.namespace);
 
-	}
+    }
 
 }
