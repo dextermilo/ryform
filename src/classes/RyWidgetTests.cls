@@ -8,7 +8,7 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';
+		f.defaultValue = 'test value';
 		
 		// Create a widget, relate it to the field
 		RyWidget.Base w = new RyWidget.Base();
@@ -22,14 +22,14 @@ public class RyWidgetTests {
 		
 		system.assert(rendered.contains(f.name));
 		system.assert(rendered.contains(f.description));
-		system.assert(rendered.contains(f.default_value));
+		system.assert(rendered.contains(f.defaultValue));
 		system.assert(rendered.contains('input-large'));
 		
 		// Set a current value and test that it is displayed
-		f.current_value = 'test input';
+		f.currentValue = 'test input';
 		rendered = w.render();
-		system.assert(rendered.contains(f.current_value));
-		system.assert(!rendered.contains(f.default_value));
+		system.assert(rendered.contains(f.currentValue));
+		system.assert(!rendered.contains(f.defaultValue));
 		
 		// Add error
 		f.error = 'Test error.';
@@ -37,7 +37,7 @@ public class RyWidgetTests {
 		system.assert(rendered.contains(f.error));
 		
 		// Extract the value
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		params.put('test', 'monkey');
 		
 		system.assertEquals(null, w.extract(null));
@@ -52,7 +52,7 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';
+		f.defaultValue = 'test value';
 		
 		// Create a Text Widget, relate it to the field
 		RyWidget.Text w = new RyWidget.Text();
@@ -76,7 +76,7 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';	
+		f.defaultValue = 'test value';	
 		
 		RyWidget.Checkbox w = new RyWidget.Checkbox();
 		f.widget = w;
@@ -91,7 +91,7 @@ public class RyWidgetTests {
 		system.assert(!rendered.contains('checked'));
 		system.assert(rendered.contains(f.error));
 		system.assert(rendered.contains('checkbox'));
-		f.current_value = '1';
+		f.currentValue = '1';
 		rendered = w.render();
 		system.assert(rendered.contains('checked'));
 	}
@@ -103,7 +103,7 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';	
+		f.defaultValue = 'test value';	
 		
 		RyWidget.Password w = new RyWidget.Password();
 		f.widget = w;
@@ -117,7 +117,7 @@ public class RyWidgetTests {
 		rendered = w.render();
 		system.assert(rendered.contains(f.error));
 		system.assert(rendered.contains('password'));
-		system.assertEquals(w.render_value(), '');
+		system.assertEquals(w.renderValue(), '');
 	}
 	
 	@isTest
@@ -127,10 +127,10 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';
+		f.defaultValue = 'test value';
 		
 		RyWidget.SelectMenu w = new RyWidget.SelectMenu();
-		w.values = new list<string>{
+		w.values = new List<String>{
 			'Dog',
 			'Cat',
 			'Goose'
@@ -154,7 +154,7 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';
+		f.defaultValue = 'test value';
 		
 		RyWidget.Secret w = new RyWidget.Secret();
 		f.widget = w;
@@ -174,7 +174,7 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';
+		f.defaultValue = 'test value';
 		
 		RyWidget.Plain w = new RyWidget.Plain();
 		f.widget = w;
@@ -194,7 +194,7 @@ public class RyWidgetTests {
 		RyField f = new RyField();
 		f.name = 'test';
 		f.description = 'This is a test.';
-		f.default_value = 'test value';
+		f.defaultValue = 'test value';
 		
 		RyWidget.ObjectList w = new RyWidget.ObjectList();
 		f.widget = w;
@@ -203,9 +203,9 @@ public class RyWidgetTests {
 		// Subform Schema
 		RySubForm subform = new RySubForm();
 
-		subform.add_field('f1', 'Field1');
-		subform.add_field('f2', 'Field2');
-		subform.parent_field = f;
+		subform.addField('f1', 'Field1');
+		subform.addField('f2', 'Field2');
+		subform.parentField = f;
 
 		w.schema = subform;
 		w.setup();
@@ -239,7 +239,7 @@ public class RyWidgetTests {
 		system.assertEquals('vf1-2', val[1].get('f1--2'));
 		system.assertEquals('vf2-2', val[1].get('f2--2'));
 
-		f.current_value = raw_val;
+		f.currentValue = raw_val;
 
 		system.assert(w.render().contains('vf1-1'));
 		system.assert(w.render().contains('vf2-2'));

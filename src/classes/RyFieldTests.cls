@@ -17,29 +17,29 @@ public class RyFieldTests {
 		field.namespace = 'person';
 		field.suffix = '1';
 
-		system.assertEquals('person-email--1',field.rendered_name);
+		system.assertEquals('person-email--1',field.renderedName);
 	}
 
 	@isTest
-	static void test_setup_validators() {
+	static void test_setupValidators() {
 
 		RyField field = new RyField();
 		field.name = 'Name';
 
 		field.setup();
-		field.setup_validators();
+		field.setupValidators();
 
-		system.assert(field.widget.validator_css.contains('required'));
+		system.assert(field.widget.validatorCss.contains('required'));
 
 	}
 	
 	@isTest
-	static void test_widgetify() {
+	static void test_setupWidget() {
 		RyField field = new RyField();
 		
 		field.widget.type = 'Text';
 		
-		field.widgetify();
+		field.setupWidget();
 		
 		// Render the widget and make sure it is not the default
 		system.assert(field.widget.render().contains('<textarea'));
@@ -51,7 +51,7 @@ public class RyFieldTests {
 		field.name = 'spam';
 		field.label = 'Test';
 		field.description = 'A test field.';
-		field.default_value = 'value';
+		field.defaultValue = 'value';
 		field.error = 'Oh no!';
 		
 		String rendered = field.rendered;

@@ -13,7 +13,7 @@ public class RySubFormTests {
 
 		system.assertEquals('', subform.namespace);
 
-		subform.parent_field = fld;
+		subform.parentField = fld;
 
 		system.assertEquals(fld.name, subform.namespace);
 

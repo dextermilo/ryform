@@ -4,10 +4,10 @@ public abstract class RyValidator {
 		
 		public String message;
 		public Boolean valid;
-		public String css_class = '';
+		public String cssClass = '';
 		public integer max;
 		
-		public virtual void validate(String value, map<string,string> params) {
+		public virtual void validate(String value, Map<String, String> params) {
 			this.valid = true;
 		}
 
@@ -24,13 +24,13 @@ public abstract class RyValidator {
 	/* Required Field */
 	public virtual class Required extends Base {
 		
-		public override void validate(String value, map<string,string> params) {
+		public override void validate(String value, Map<String, String> params) {
 			this.valid = value != null && value != '';
 		}
 		
 		public override void setup() {
 			this.message = 'This field is required.';
-			this.css_class = 'required';
+			this.cssClass = 'required';
 		}
 		
 	}
@@ -38,7 +38,7 @@ public abstract class RyValidator {
 	/* Is numeric */
 	public virtual class isNumber extends Base {
 		
-		public override void validate(String value, map<string,string> params) {
+		public override void validate(String value, Map<String, String> params) {
 			Pattern r = pattern.compile('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
 			Matcher m = r.matcher(value);
 			this.valid = m.matches();
@@ -46,7 +46,7 @@ public abstract class RyValidator {
 		
 		public override void setup() {
 			this.message = 'Please enter a valid number';
-			this.css_class = 'number';
+			this.cssClass = 'number';
 		}
 		
 	}
@@ -54,7 +54,7 @@ public abstract class RyValidator {
 	/* Is Email */
 	public virtual class isEmail extends Base {
 		
-		public override void validate(String value, map<string,string> params) {
+		public override void validate(String value, Map<String, String> params) {
 			Pattern r = pattern.compile('^[-a-z0-9~!$%^&*_=+}{\\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?');
 			Matcher m = r.matcher(value);
 			this.valid = m.matches();
@@ -62,7 +62,7 @@ public abstract class RyValidator {
 		
 		public override void setup() {
 			this.message = 'Please enter a valid email address';
-			this.css_class = 'email';
+			this.cssClass = 'email';
 		}
 		
 	}
@@ -70,7 +70,7 @@ public abstract class RyValidator {
 	/* Is URL */
 	public virtual class isURL extends Base {
 		
-		public override void validate(String value, map<string,string> params) {
+		public override void validate(String value, Map<String, String> params) {
 			Pattern r = pattern.compile('^(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]');
 			Matcher m = r.matcher(value);
 			this.valid = m.matches();
@@ -78,7 +78,7 @@ public abstract class RyValidator {
 		
 		public override void setup() {
 			this.message = 'Please enter a valid website URL';
-			this.css_class = 'url';
+			this.cssClass = 'url';
 		}
 		
 	}
@@ -86,7 +86,7 @@ public abstract class RyValidator {
 	/* Max length */
 	public virtual class maxLength extends Base {
 		
-		public override void validate(String value, map<string,string> params) {
+		public override void validate(String value, Map<String, String> params) {
 			if (this.max != null) {
 				this.message = 'Please enter a value with less than '+String.valueOf(max) +' characters.';
 				this.valid = value.length() <= max;
@@ -97,7 +97,7 @@ public abstract class RyValidator {
 		
 		public override void setup() {
 			this.message = '';
-			this.css_class = '';
+			this.cssClass = '';
 		}
 		
 	}
@@ -105,7 +105,7 @@ public abstract class RyValidator {
 	/* Is Date */
 	public virtual class isDate extends Base {
 		
-		public override void validate(String value, map<string,string> params) {
+		public override void validate(String value, Map<String, String> params) {
 			if (value != null && value != '') {
 				try {
 					date d = date.parse(value);
@@ -134,7 +134,7 @@ public abstract class RyValidator {
 		
 		public override void setup() {
 			this.message = 'Please enter a valid date';
-			this.css_class = 'date';
+			this.cssClass = 'date';
 		}
 		
 	}

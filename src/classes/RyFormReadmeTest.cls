@@ -69,20 +69,20 @@ public class RyFormReadmeTest {
 		first_name.label = 'First Name';
 
 		/* Let's go ahead and add our field to the form, instead of operating on the list of fields directly we are going to use
-		   the form.add_field(RyField) method.  This method will help us make sure everything is done correctly.
+		   the form.addField(RyField) method.  This method will help us make sure everything is done correctly.
 		   For example it will prevent us from adding two fields with the same name
 		*/
 
-		form.add_field(first_name);
+		form.addField(first_name);
 
 		// Let's make sure the field was added:
 
 		system.assert(form.fields.size() == 1);
 
-		// We can now easily retrieve our field using the get_field(String) method. For example, we might use this to change
+		// We can now easily retrieve our field using the getField(String) method. For example, we might use this to change
 		// our field after it has been added, like by adding a description:
 
-		form.get_field('first_name').description = 'This will be displayed below the widget on the form!';
+		form.getField('first_name').description = 'This will be displayed below the widget on the form!';
 
 		// Now that we have a field all we need to do is call form.setup() and we are good to go!
 
@@ -107,7 +107,7 @@ public class RyFormReadmeTest {
 
 		// And add it to the form:
 
-		form.add_field(email);
+		form.addField(email);
 
 		// Let's pass the form some input, the form always expects to receive the input as
 		// a Map<String, String>
@@ -143,7 +143,7 @@ public class RyFormReadmeTest {
 
 		// Yep, it was.  We can also get the error message off of the field itself:
 
-		system.assert(form.get_field('email').error.contains('enter a valid email'));
+		system.assert(form.getField('email').error.contains('enter a valid email'));
 
 		// We can also see that the error was rendered for the user:
 
@@ -162,22 +162,22 @@ public class RyFormReadmeTest {
 		system.assert(success);
 
 		// Yay success!  But wait, we have only added basic text line fields.
-		// Let's add an optional bio field (and show off the alternate version of add_field(name, label):
+		// Let's add an optional bio field (and show off the alternate version of addField(name, label):
 
-		form.add_field('bio', 'Bio');
-		form.get_field('bio').description = 'Optionally, say a little about yourself.';
+		form.addField('bio', 'Bio');
+		form.getField('bio').description = 'Optionally, say a little about yourself.';
 
 		// Set the field.widget attribute (defaults to RyWidget.Textline), we want this field
 		// to use a multiline textarea:
 
-		form.get_field('bio').widget = new RyWidget.Text();
+		form.getField('bio').widget = new RyWidget.Text();
 
 		// Fields also have field.setup() methods.  These help with creating the links
 		// between field and widget and making sure that the field is in a stable state.
 		// Normally, calling field.setup() is not required but it is a good idea after
 		// setting a new widget.
 
-		form.get_field('bio').setup();
+		form.getField('bio').setup();
 
 		form.setup();
 
@@ -197,7 +197,7 @@ public class RyFormReadmeTest {
 
 		// No problem! Let's just change required attribute of our field (defaults to true):
 
-		form.get_field('bio').required = false;
+		form.getField('bio').required = false;
 
 		form.setup();
 
@@ -219,7 +219,7 @@ public class RyFormReadmeTest {
 		/* The RyFormParser is very handy when you want to persist an editable form schema in the
 		   database or pass in a schema from an external system.
 
-		   First let's create a string that represents the same form that we created
+		   First let's create a String that represents the same form that we created
 		   in the previous test.
 
 		   I will try to make this pretty and easy to read, but the multiline formatting is
@@ -271,11 +271,11 @@ public class RyFormReadmeTest {
 
 		system.assertEquals(3, form.fields.size());
 
-		system.assert(form.get_field('first_name') != null);
+		system.assert(form.getField('first_name') != null);
 
-		system.assert(form.get_field('email') != null);
+		system.assert(form.getField('email') != null);
 
-		system.assert(form.get_field('bio') != null);
+		system.assert(form.getField('bio') != null);
 
 		// Now we can use our form just like we did in the previous test:
 
@@ -429,12 +429,12 @@ public class RyFormReadmeTest {
 		RyField name = new RyField();
 		name.name = 'Name';
 		name.label = 'Name';
-		form.add_field(name);
+		form.addField(name);
 
 		RyField description = new RyField();
 		description.name = 'desc';
 		description.label = 'Description';
-		form.add_field(description);
+		form.addField(description);
 
 		// Now, let's add a Model to our form:
 
@@ -442,7 +442,7 @@ public class RyFormReadmeTest {
 
 		// Set the SObject that we are going to insert:
 
-		model.sf_object = 'Account';
+		model.sfObject = 'Account';
 
 		// Add the fields we want to set:
 

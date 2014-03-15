@@ -1,23 +1,23 @@
 public class RyFormParser {
 
-	public static RyForm parse(String schema) {
+    public static RyForm parse(String schema) {
 
-		JSONParser parser = JSON.createParser(schema);
-		Type form_class =  Type.forName('RyForm');
-        Ryform form = (RyForm)parser.readValueAs(form_class);
+        JSONParser parser = JSON.createParser(schema);
+        Type formClass =  Type.forName('RyForm');
+        Ryform form = (RyForm)parser.readValueAs(formClass);
 
         if (form.fields != null) {
-        	for (RyField field : form.fields) {
-        		field.widgetify();
-        		field.setup();
-        	}
+            for (RyField field : form.fields) {
+                field.setupWidget();
+                field.setup();
+            }
         }
 
-        form.set_defaults();
+        form.setDefaults();
         
         return form;
 
-	}
-	
-	
+    }
+    
+    
 }

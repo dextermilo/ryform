@@ -10,25 +10,25 @@ public class RyFormTests {
 		field.name = 'spam';
 		field.label = 'Test';
 		field.description = 'A test field.';
-		field.default_value = 'value';
+		field.defaultValue = 'value';
 		field.validator = 'isURL';
 		field.max = 40;
 		
 		RyField field2 = new RyField();
 		field2.name = 'number';
 		field2.label = 'Number';
-		field2.data_type = 'number';
+		field2.dataType = 'number';
 		
-		form.add_field(field);
-		form.add_field(field2);
+		form.addField(field);
+		form.addField(field2);
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		params.put('spam', 'floogle');
 		params.put('number', 'NaN');
 		form.params = params;
 
 		RyModel.ModelSchema model = new RyModel.ModelSchema();
-		model.sf_object = 'Account';
+		model.sfObject = 'Account';
 		model.addNode('spam', new RyModel.SchemaNode('Name'));
 
 		form.models.add(model);
@@ -43,7 +43,7 @@ public class RyFormTests {
 		form.setup();
 		
 		// Test Set current value
-		system.assertEquals('floogle', form.fields[0].current_value);
+		system.assertEquals('floogle', form.fields[0].currentValue);
 		
 		// Test Setup validators
 		Boolean req = false;
@@ -51,10 +51,10 @@ public class RyFormTests {
 		Boolean man = false;
 		
 		for (RyField fld : form.fields) {
-			for (RyValidator.Base v : fld.ryvalidators) {
-				if (v.css_class == 'required') req = true;
-				if (v.css_class == 'number') num = true;
-				if (v.css_class == 'url') man = true;
+			for (RyValidator.Base v : fld.ryValidators) {
+				if (v.cssClass == 'required') req = true;
+				if (v.cssClass == 'number') num = true;
+				if (v.cssClass == 'url') man = true;
 			}
 		}
 		
@@ -87,18 +87,18 @@ public class RyFormTests {
 	}
 	
 	@isTest
-	static void test_get_field() {
+	static void test_getField() {
 		RyForm form = setupTestForm();
 		
-		system.assert(form.get_field('spam') != null);
+		system.assert(form.getField('spam') != null);
 	}
 
 	@isTest
-	static void test_add_field() {
+	static void test_addField() {
 		RyForm form = setupTestForm();
-		form.add_field('count', 'The Count');
+		form.addField('count', 'The Count');
 
-		system.assert(form.get_field('count') != null);
+		system.assert(form.getField('count') != null);
 
 	}
 
@@ -141,7 +141,7 @@ public class RyFormTests {
 
 		system.assertEquals(null, responses);
 
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		params.put('spam', 'http://www.google.com');
 		params.put('number', '10');
 		form.params = params;
@@ -158,12 +158,12 @@ public class RyFormTests {
 	static void test_auto_model() {
 
 		RyForm form = new RyForm();
-		form.sf_object = 'Account';
+		form.sfObject = 'Account';
 		form.auto_model = true;
 		form.action = 'upsert';
 
-		form.add_field('Name', 'Name');
-		form.add_field('Description', 'Description');
+		form.addField('Name', 'Name');
+		form.addField('Description', 'Description');
 
 		Map<String, String> params = new Map<String, String>{
 			'Name' => 'ACME Sales',

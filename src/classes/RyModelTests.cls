@@ -23,22 +23,22 @@ public class RyModelTests {
 		Boolean man = false;
 		Boolean email = false;
 
-		node.setup_validators();
+		node.setupValidators();
 
-		for (RyValidator.Base v : node.ryvalidators) {
-			if (v.css_class == 'required') req = true;
+		for (RyValidator.Base v : node.ryValidators) {
+			if (v.cssClass == 'required') req = true;
 		}
 
 		system.assert(req);
-		system.assert(node.ryvalidators.size() == 1);
+		system.assert(node.ryValidators.size() == 1);
 
-		node.data_type = 'number';
+		node.dataType = 'number';
 		node.max = 10;
 
-		node.setup_validators();
+		node.setupValidators();
 
-		for (RyValidator.Base v : node.ryvalidators) {
-			if (v.css_class == 'number') num = true;
+		for (RyValidator.Base v : node.ryValidators) {
+			if (v.cssClass == 'number') num = true;
 		}
 
 		system.assert(num);
@@ -46,20 +46,20 @@ public class RyModelTests {
 		node.validator = 'isURL';
 		node.validators.add('isURL');
 
-		node.setup_validators();
+		node.setupValidators();
 
-		for (RyValidator.Base v : node.ryvalidators) {
-			if (v.css_class == 'url') man = true;
+		for (RyValidator.Base v : node.ryValidators) {
+			if (v.cssClass == 'url') man = true;
 		}
 		
 		system.assert(man);
 
-		node.add_validator('isEmail');
+		node.addValidator('isEmail');
 
-		node.setup_validators();
+		node.setupValidators();
 
-		for (RyValidator.Base v : node.ryvalidators) {
-			if (v.css_class == 'email') email = true;
+		for (RyValidator.Base v : node.ryValidators) {
+			if (v.cssClass == 'email') email = true;
 		}
 		
 		system.assert(email);
@@ -70,17 +70,17 @@ public class RyModelTests {
 	static void test_validate() {
 		RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
 
-		node.setup_validators();
+		node.setupValidators();
 
 		system.assert(node.validate() == '');
 
 		node.required = true;
 
-		node.setup_validators();
+		node.setupValidators();
 
 		system.assert(node.validate() != '');
 
-		node.current_value = 'Something';
+		node.currentValue = 'Something';
 
 		system.assert(node.validate() == '');
 	}
@@ -170,16 +170,16 @@ public class RyModelTests {
 		model.addNode('text', node2);
 		model.addNode('employee_count', node3);
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		params.put('Name', 'Test Name');
 		params.put('text', 'A really good test company.');
 		params.put('employee_count', '10');
 
-		// Test null sf_object first
+		// Test null sfObject first
 		response = RyModel.processModel(params, model);
-		system.assert(response.error.contains('ModelSchema.sf_object'));
+		system.assert(response.error.contains('ModelSchema.sfObject'));
 
-		model.sf_object = 'Account';
+		model.sfObject = 'Account';
 
 		// Dry-run
 		model.action = 'return';
@@ -260,7 +260,7 @@ public class RyModelTests {
 
 		RyModel.ProcessedResponse response;
 		
-		model.sf_object = 'Account';
+		model.sfObject = 'Account';
 		model.addNode(node);
 		model.addNode('text', node2);
 		model.addNode('employee_count', node3);
@@ -289,7 +289,7 @@ public class RyModelTests {
 
 		RyModel.ProcessedResponse response;
 		
-		model.sf_object = 'Account';
+		model.sfObject = 'Account';
 		model.addNode(node);
 		model.addNode('text', node2);
 		model.addNode('employee_count', node3);

@@ -6,11 +6,11 @@ public with sharing class RyModelTestController {
 	
 	public static RyModel.ModelSchema opp_schema { get; set; }
 	
-	public map<string,string> params {get;set;}
+	public Map<String, String> params {get;set;}
 	
-	public string test_json { get; set; }
+	public String test_json { get; set; }
 	
-	public string test_nav { get; set; }
+	public String test_nav { get; set; }
 	
 	public RyModelTestController() {
 		
@@ -31,26 +31,26 @@ public with sharing class RyModelTestController {
 		RyField sub_field = new RyField();
 		sub_field.name = 'person';
 		sub_field.label = 'Person';
-		list_form.add_field(sub_field);
+		list_form.addField(sub_field);
 
 		RyField sub_field2 = new RyField();
 		sub_field2.name = 'age';
 		sub_field2.label = 'Age';
-		list_form.add_field(sub_field2);
+		list_form.addField(sub_field2);
 
 		RyField sub_field3 = new RyField();
 		sub_field3.name = 'bio';
 		sub_field3.label = 'Bio';
 		sub_field3.widget = new RyWidget.Text();
 		sub_field3.setup();
-		list_form.add_field(sub_field3);
+		list_form.addField(sub_field3);
 
 		list_field.widget = new RyWidget.ObjectList();
 		list_field.widget.schema = list_form;
 		list_field.widget.setup();
 		list_field.setup();
 
-		form.add_field(list_field);
+		form.addField(list_field);
 
 		form.setup();
 	   
@@ -59,7 +59,7 @@ public with sharing class RyModelTestController {
 	
 	public PageReference submit() {
 		
-		map<string,string> params = ApexPages.currentPage().getParameters();
+		Map<String, String> params = ApexPages.currentPage().getParameters();
 		form.params = params;
 		form.setup();
 		RyModel.ProcessedResponse result;

@@ -7,7 +7,7 @@ public class RyValidatorTests {
 	static void test_base() {
 		RyValidator.Base v = new RyValidator.Base();
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		
 		v.setup();
 		v.validate('value', params);
@@ -19,7 +19,7 @@ public class RyValidatorTests {
 	static void test_required() {
 		RyValidator.Required v = new RyValidator.Required();
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		
 		v.setup();
 		
@@ -38,7 +38,7 @@ public class RyValidatorTests {
 	static void test_number() {
 		RyValidator.isNumber v = new RyValidator.isNumber();
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		
 		v.setup();
 		
@@ -57,7 +57,7 @@ public class RyValidatorTests {
 	static void test_email() {
 		RyValidator.isEmail v = new RyValidator.isEmail();
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		
 		v.setup();
 		
@@ -76,7 +76,7 @@ public class RyValidatorTests {
 	static void test_date() {
 		RyValidator.isDate v = new RyValidator.isDate();
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		
 		v.setup();
 		
@@ -138,7 +138,7 @@ public class RyValidatorTests {
 	static void test_url() {
 		RyValidator.isURL v = new RyValidator.isURL();
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		
 		v.setup();
 		
@@ -157,7 +157,7 @@ public class RyValidatorTests {
 	static void test_maxLength() {
 		RyValidator.maxLength v = new RyValidator.maxLength();
 		
-		map<string,string> params = new map<string,string>();
+		Map<String, String> params = new Map<String, String>();
 		
 		// Validate without max set, pass
 		v.max = null;

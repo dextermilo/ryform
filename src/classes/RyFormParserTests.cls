@@ -31,7 +31,7 @@ public class RyFormParserTests {
 
 		RyForm form = RyFormParser.parse(schema);
 
-		system.assert(form.get_field('first_name') != null);
-		system.assert(form.get_field('bio') != null);
+		system.assert(form.getField('first_name') != null);
+		system.assert(form.getField('bio') != null);
 	}
 }
