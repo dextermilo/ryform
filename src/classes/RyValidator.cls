@@ -6,7 +6,7 @@ public abstract class RyValidator {
         
         /* Return null means validation passed */
         public virtual String validate(String value, Map<String, String> params) {
-            if (this.check(value, params)) {
+            if (!this.check(value, params)) {
                 return this.message;
             }
             return null;
@@ -25,7 +25,10 @@ public abstract class RyValidator {
     public virtual class Required extends Base {
         
         public override Boolean check(String value, Map<String, String> params) {
-            return value != null && value != '';
+            if (value != null && value != '') {
+                return true;
+            }
+            return false;
         }
         
         public override void setup() {
@@ -41,7 +44,7 @@ public abstract class RyValidator {
             Pattern r = pattern.compile('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
             Matcher m = r.matcher(value);
 
-            return !m.matches();
+            return m.matches();
         }
         
         public override void setup() {
@@ -85,7 +88,7 @@ public abstract class RyValidator {
         
         public override Boolean check(String value, Map<String, String> params) {
             if (this.max != null) {
-                if (this.message == null) this.message = 'Please enter a value with less than '+String.valueOf(max) +' characters.';
+                this.message = 'Please enter a value with less than '+String.valueOf(max) +' characters.';
                 return value.length() <= max;
             } else {
                 return true;
@@ -104,11 +107,9 @@ public abstract class RyValidator {
         public override Boolean check(String value, Map<String, String> params) {
             if (value != null && value != '') {
                 try {
-                    date d = date.parse(value);
+                    Date d = date.parse(value);
                     return true;
-                    
                 } catch (exception e) {
-                    
                     return false;
                 }
             } else {

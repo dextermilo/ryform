@@ -11,45 +11,36 @@ public class RyValidatorTests {
         
         v.setup();
         String error = v.validate('value', params);
-        
         system.assertEquals(error, null);
     }
     
     @isTest
     static void test_required() {
         RyValidator.Required v = new RyValidator.Required();
-        
         Map<String, String> params = new Map<String, String>();
-        
         v.setup();
         
         // Validate with no value, fail
         String error = v.validate('', params);
-        
         system.assertNotEquals(error, null);
         
         // Validate with a value, pass
-        v.validate('value', params);
-        
+        error = v.validate('value', params);
         system.assertEquals(error, null);
     }
     
     @isTest
     static void test_number() {
         RyValidator.isNumber v = new RyValidator.isNumber();
-        
         Map<String, String> params = new Map<String, String>();
-        
         v.setup();
         
         // Validate with non-number, fail
         String error = v.validate('abc', params);
-        
         system.assertNotEquals(error, null);
         
         // Validate with a number, pass
         error = v.validate('23', params);
-        
         system.assertEquals(error, null);
     }
     
@@ -143,16 +134,14 @@ public class RyValidatorTests {
     @isTest
     static void test_maxLength() {
         RyValidator.maxLength v = new RyValidator.maxLength();
-        
         Map<String, String> params = new Map<String, String>();
-        
+        v.setup();
         // Validate without max set, pass
         v.max = null;
         String error = v.validate('12345678901', params);
         system.assertEquals(error, null);
         
         v.max = 10;
-        v.setup();
         
         // fail
         error = v.validate('12345678901', params);
@@ -162,7 +151,6 @@ public class RyValidatorTests {
         
         // pass
         error = v.validate('123', params);
-        
         system.assertEquals(error, null);
     }
 }
