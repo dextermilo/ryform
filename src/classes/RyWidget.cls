@@ -220,7 +220,7 @@ public class RyWidget {
                 List<String> keys = new List<String>();
 
                 if (!this.schema.fields.isEmpty()) {
-                    for (RyField field : this.schema.fields) {
+                    for (RyForm.Field field : this.schema.fields) {
                         for (String key : params.keySet()) {
                             if (key.startsWith(field.name) && key.contains('--')) {
                                 keys.add(key);

@@ -137,7 +137,7 @@ public virtual class RyForm {
     }
     
     // The list of fields on our form
-    public List<RyField> fields { get; set; }
+    public List<RyForm.Field> fields { get; set; }
     
     // Prefix to apply to field names when they are rendered to avoid conflicts with other forms
     public String namespace { get; set; }
@@ -157,7 +157,7 @@ public virtual class RyForm {
 
 
     public virtual void setDefaults() {
-        if (fields == null) fields = new List<RyField>();
+        if (fields == null) fields = new List<RyForm.Field>();
         if (errors == null) errors = new Map<String, String>();
         if (models == null) models = new List<RyModel.ModelSchema>();
         if (params == null) params = new Map<String, String>();
@@ -167,7 +167,7 @@ public virtual class RyForm {
     }
     
 
-    public virtual void addField(RyField field) {
+    public virtual void addField(RyForm.Field field) {
         // Method to add a new field to the list. Prevents duplicate names.
 
         if (getField(field.name) == null) {
@@ -177,18 +177,18 @@ public virtual class RyForm {
     public virtual void addField(String name, String label) {
         // Method to create then add a field.
 
-        RyField field = new RyField();
+        RyForm.Field field = new RyForm.Field();
         field.name = name;
         field.label = label;
         addField(field);
     }
     
     
-    public virtual RyField getField(String name) {
+    public virtual RyForm.Field getField(String name) {
         // Method to get a field by name
 
         if (!fields.isEmpty()) {
-            for (RyField field : fields) {
+            for (RyForm.Field field : fields) {
                 if (field.name == name) {
                     return field;
                 }
@@ -204,7 +204,7 @@ public virtual class RyForm {
         // Reset errors
         errors = new Map<String, String>();
         
-        for (RyField field : fields) {
+        for (RyForm.Field field : fields) {
             
             //Namespace
             field.namespace = this.namespace;
@@ -224,7 +224,7 @@ public virtual class RyForm {
         errors = new Map<String, String>();
         
         // Run validation
-        for (RyField field : fields) {
+        for (RyForm.Field field : fields) {
             
             String error = field.validate(this.params);
 
@@ -234,7 +234,7 @@ public virtual class RyForm {
             
         }
         
-        for (RyField field : fields) {
+        for (RyForm.Field field : fields) {
             if (!errors.containsKey(field.name)) {
                 field.error = '';
             }
@@ -326,7 +326,7 @@ public virtual class RyForm {
         // Unallocated Fields
         if (!fields.isEmpty()) {
             
-            for (RyField field : fields) {
+            for (RyForm.Field field : fields) {
                 Boolean renderThis = true;
                 for (String fieldName : renderedFields) {
                     if (fieldName == field.name) {
@@ -353,7 +353,7 @@ public virtual class RyForm {
             schema.action = this.action;
         }
         Boolean hasId = false;
-        for (RyField field : this.fields) {
+        for (RyForm.Field field : this.fields) {
             if (field.sfField == null) {
                 field.sfField = field.name;
             }
