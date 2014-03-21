@@ -1,5 +1,102 @@
 public virtual class RyForm {
 
+    public class Field extends RySchema.Node {
+        public RyWidget.Base widget { get; set; }
+        public String rendered {
+            // This property simple returns the result of calling render()
+            // which allows it to be used in VisualForce
+            get {
+                return render();
+            }
+            set;    
+        }
+        public String name {
+            get {
+                return key;
+            }
+            set {
+                key = name;
+            }
+        }
+        public String namespace { get; set; }
+        public String suffix { get; set; }
+        public String label { get; set; }
+        public String description { get; set; }
+        public String renderedName {
+            // Add the namespace to the name
+            get {
+                String output = '';
+                if (this.namespace != '' && this.namespace != null) {
+                    output += this.namespace + '-' + this.name;
+                } else {
+                    output += this.name;
+                }
+                if (this.suffix != null && this.suffix != '') {
+                    output += '--' + suffix;
+                }
+                return output;
+            }
+        }
+
+        public override void setup() {
+            // This is not done in the standard constructor because contructors are
+            // not fired when the class is instantiated using JSON parser.
+            if (this.required == null) this.required = true;
+            super.setup();
+
+            if (this.widget == null) this.widget = new RyWidget.TextLine();
+            
+            // TODO: this.widget.field = this;
+            this.widget.setup();
+        }
+        
+        public Field() {
+            this.setup();
+        }
+        
+        public String render() {
+            return '<div class="form-group ryfield-'+this.renderedName+' '+(this.error != null && this.error != '' ? 'error' : '')+'"><label class="control-label" for="'+this.renderedName+'">'+this.label+(this.required ? '<span class="ryfield-required">*</span>' : '')+'</label><div class="controls">'+this.widget.render()+'</div></div>';
+        }
+        
+        public override void setupValidators() {
+            super.setupValidators();
+            this.widget.validatorCss = null;
+            
+            for (RyValidator.Base validator : this.ryValidators) {
+                if (validator.cssClass != null && validator.cssClass != '') {
+                    this.widget.validatorCss.add(validator.cssClass);
+                }
+            }
+        }
+
+        public override String validate(Map<String, String> params) {
+            if (this.currentValue == null) {
+                this.currentValue = this.widget.extract(params);
+            }
+            return super.validate(params);
+        }
+        
+        public void setupWidget() {
+            // This method takes the non-functional base widget created when parsing
+            // and converts it into the correct widget class.
+            if (this.widget != null) {
+                // Important: remove reference from widget to field to prevent recursive cycle
+                this.widget.field = null;
+
+                String widget_json = JSON.serialize(this.widget);
+                JSONParser parser = JSON.createParser(widget_json);
+                Type widget_class;
+                if (!this.widget.type.contains('.')) {
+                        widget_class = Type.forName('RyWidget.'+this.widget.type);
+                }
+                this.widget = (RyWidget.Base)parser.readValueAs(widget_class);
+                this.widget.setup();
+                // TODO: this.widget.field = this;
+            }
+        }
+    }
+
+    // Basic class for fieldsets
     public class RyFieldset {
         public String name { get; set; }
         public List<String> fields { get; set; }
