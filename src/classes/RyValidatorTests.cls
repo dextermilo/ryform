@@ -2,6 +2,9 @@
 public class RyValidatorTests {
     /* Tests */
     
+    public class Mock {
+        String name = 'Foozy';
+    }
 
     @isTest
     static void test_base() {
@@ -59,7 +62,6 @@ public class RyValidatorTests {
         
         // Validate with an email, pass
         error = v.validate('testmoney+123@gmail.com', params);
-        
         system.assertEquals(error, null);
     }
     
@@ -110,6 +112,10 @@ public class RyValidatorTests {
         //Validate with abbreviated year, fail
         error = v.validate('5-5-12', params);
         system.assertNotEquals(error, null);
+
+        // Validate with wrong class
+        error = v.validate(new Mock(), params);
+        system.assertNotEquals(null, error);
     }
         
     

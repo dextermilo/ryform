@@ -2,17 +2,17 @@ public abstract class RyValidator {
 
     public virtual class Base {
         public String message;
-        public integer max;
+        public Integer max;
         
         /* Return null means validation passed */
-        public virtual String validate(String value, Map<String, String> params) {
+        public virtual String validate(Object value, Map<String, Object> params) {
             if (!this.check(value, params)) {
                 return this.message;
             }
             return null;
         }
 
-        public virtual Boolean check(String value, Map<String, String> params) {
+        public virtual Boolean check(Object value, Map<String, Object> params) {
             return true;
         }
         
@@ -24,7 +24,7 @@ public abstract class RyValidator {
     /* Required Field */
     public virtual class Required extends Base {
         
-        public override Boolean check(String value, Map<String, String> params) {
+        public override Boolean check(Object value, Map<String, Object> params) {
             if (value != null && value != '') {
                 return true;
             }
@@ -40,11 +40,16 @@ public abstract class RyValidator {
     /* Is numeric */
     public virtual class isNumber extends Base {
         
-        public override Boolean check(String value, Map<String, String> params) {
-            Pattern r = pattern.compile('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
-            Matcher m = r.matcher(value);
-
-            return m.matches();
+        public override Boolean check(Object value, Map<String, Object> params) {
+            if (value instanceOf Integer) {
+                return true;
+            } else if (value instanceOf String) {
+                String strValue = String.valueOf(value);
+                Pattern r = pattern.compile('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
+                Matcher m = r.matcher(strValue);
+                return m.matches();
+            }
+            return false;
         }
         
         public override void setup() {
@@ -56,10 +61,13 @@ public abstract class RyValidator {
     /* Is Email */
     public virtual class isEmail extends Base {
         
-        public override Boolean check(String value, Map<String, String> params) {
-            Pattern r = pattern.compile('^[-a-z0-9~!$%^&*_=+}{\\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?');
-            Matcher m = r.matcher(value);
-            return m.matches();
+        public override Boolean check(Object value, Map<String, Object> params) {
+            if (value instanceOf String) {
+                Pattern r = pattern.compile('^[-a-z0-9~!$%^&*_=+}{\\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?');
+                Matcher m = r.matcher((String)value);
+                return m.matches();
+            }
+            return false;
         }
         
         public override void setup() {
@@ -71,10 +79,14 @@ public abstract class RyValidator {
     /* Is URL */
     public virtual class isURL extends Base {
         
-        public override Boolean check(String value, Map<String, String> params) {
-            Pattern r = pattern.compile('^(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]');
-            Matcher m = r.matcher(value);
-            return m.matches();
+        public override Boolean check(Object value, Map<String, Object> params) {
+            if (value instanceOf String) {
+                String strValue = String.valueOf(value);
+                Pattern r = pattern.compile('^(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]');
+                Matcher m = r.matcher((String)value);
+                return m.matches();
+            }
+            return false;
         }
         
         public override void setup() {
@@ -86,13 +98,16 @@ public abstract class RyValidator {
     /* Max length */
     public virtual class maxLength extends Base {
         
-        public override Boolean check(String value, Map<String, String> params) {
-            if (this.max != null) {
-                this.message = 'Please enter a value with less than '+String.valueOf(max) +' characters.';
-                return value.length() <= max;
-            } else {
-                return true;
+        public override Boolean check(Object value, Map<String, Object> params) {
+            if (value instanceOf String) {
+                if (this.max != null) {
+                    this.message = 'Please enter a value with less than '+String.valueOf(max) +' characters.';
+                    return String.valueOf(value).length() <= max;
+                } else {
+                    return true;
+                }
             }
+            return false;
         }
         
         public override void setup() {
@@ -104,29 +119,22 @@ public abstract class RyValidator {
     /* Is Date */
     public virtual class isDate extends Base {
         
-        public override Boolean check(String value, Map<String, String> params) {
-            if (value != null && value != '') {
-                try {
-                    Date d = date.parse(value);
-                    return true;
-                } catch (exception e) {
-                    return false;
-                }
-            } else {
+        public override Boolean check(Object value, Map<String, Object> params) {
+            if (value instanceOf Date) {
                 return true;
+            } else if (value instanceOf String) {
+                if ((String)value != null && (String)value != '') {
+                    try {
+                        Date d = Date.parse((String)value);
+                        return true;
+                    } catch (exception e) {
+                        return false;
+                    }
+                } else {
+                    return true;
+                }
             }
-            
-            /*
-            Pattern r = pattern.compile('(0?[1-9]|[12][0-9]|3[01])(/|-)(0?[1-9]|1[012])(/|-)((19|20)\\d\\d)');
-            Pattern iso = pattern.compile('((19|20)\\d\\d)(/|-)(0?[1-9]|1[012])(/|-)(0?[1-9]|[12][0-9]|3[01])');
-            Matcher m = r.matcher(value);
-            return m.matches();
-            
-            if (!this.valid) {
-                Matcher n = iso.matcher(value);
-                return n.matches();
-            }
-            */
+            return false;
         }
         
         public override void setup() {
