@@ -17,7 +17,6 @@ public abstract class RySchema {
 
     /* This class is used to represent each field/attribute */
     public virtual class Node {
-        
         public String sfObject;
         public String sfField;
         public String key { get; set; }
@@ -43,7 +42,6 @@ public abstract class RySchema {
             }
             set;
         }
-        
         public Boolean required { get; set; }
         public String defaultValue { get; set; }
         public String currentValue { get; set; }

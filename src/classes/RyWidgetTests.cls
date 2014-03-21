@@ -5,7 +5,7 @@ public class RyWidgetTests {
     static void test_base() {
         
         // Create a field, this is required for the widget
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';
@@ -49,7 +49,7 @@ public class RyWidgetTests {
     static void test_text() {
         
         // Create a field, this is required for the widget
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';
@@ -73,7 +73,7 @@ public class RyWidgetTests {
     static void test_checkbox() {
         
         // Create a field, this is required for the widget
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';  
@@ -100,7 +100,7 @@ public class RyWidgetTests {
     static void test_password() {
         
         // Create a field, this is required for the widget
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';  
@@ -124,7 +124,7 @@ public class RyWidgetTests {
     static void test_selectMenu() {
         
         // Create a field, this is required for the widget
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';
@@ -151,7 +151,7 @@ public class RyWidgetTests {
     @isTest
     static void test_secret() {
         
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';
@@ -171,7 +171,7 @@ public class RyWidgetTests {
     @isTest
     static void test_plain() {
         
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';
@@ -191,7 +191,7 @@ public class RyWidgetTests {
     @isTest
     static void test_objectlist() {
         
-        RyField f = new RyField();
+        RyForm.Field f = new RyForm.Field();
         f.name = 'test';
         f.description = 'This is a test.';
         f.defaultValue = 'test value';

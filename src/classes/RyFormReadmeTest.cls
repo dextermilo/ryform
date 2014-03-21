@@ -14,7 +14,7 @@ public class RyFormReadmeTest {
             * RyForms: Holds the fields and most of the setup and initialization code for the form.
                        Everything starts here.
 
-            * RyFields: Contains the information specific to a single field.  Name, label, description, widget, etc.
+            * RyForm.Fields: Contains the information specific to a single field.  Name, label, description, widget, etc.
 
             * RyWidgets: The actual UI element that captures input from the user. For example, a checkbox or text field.
 
@@ -37,7 +37,7 @@ public class RyFormReadmeTest {
         /* Our primary properties and attributes are now setup,
            for now, we will only focus on the basics:
 
-            fields = new List<RyField>();
+            fields = new List<RyForm.Field>();
                 - Our fields
 
             errors = new Map<String, String>();
@@ -54,9 +54,9 @@ public class RyFormReadmeTest {
 
         system.assert(form.fields.isEmpty());
 
-        // Now we can instantiate a new RyField for adding to our form:
+        // Now we can instantiate a new RyForm.Field for adding to our form:
 
-        RyField first_name = new RyField();
+        RyForm.Field first_name = new RyForm.Field();
 
         // While we could add the field at this point, it won't be very useful without a name, label, or description:
 
@@ -69,7 +69,7 @@ public class RyFormReadmeTest {
         first_name.label = 'First Name';
 
         /* Let's go ahead and add our field to the form, instead of operating on the list of fields directly we are going to use
-           the form.addField(RyField) method.  This method will help us make sure everything is done correctly.
+           the form.addField(RyForm.Field) method.  This method will help us make sure everything is done correctly.
            For example it will prevent us from adding two fields with the same name
         */
 
@@ -97,7 +97,7 @@ public class RyFormReadmeTest {
 
         // Okay, let's add another field.
 
-        RyField email = new RyField();
+        RyForm.Field email = new RyForm.Field();
         email.name = 'email';
         email.label = 'Email Address';
 
@@ -295,7 +295,7 @@ public class RyFormReadmeTest {
 
     @isTest
     public static void basic_fieldset() {
-        /* Fieldsets are represented by a simple class, RyForm.RyFieldset, and are
+        /* Fieldsets are represented by a simple class, RyForm.Fieldset, and are
            stored on the form in a list.
 
            Fieldsets can be defined through Apex or in JSON schemas.
@@ -331,13 +331,13 @@ public class RyFormReadmeTest {
 
         // Now let's add a fieldset using Apex:
 
-        RyForm.RyFieldset fieldset = new RyForm.RyFieldset();
+        RyForm.Fieldset fieldset = new RyForm.Fieldset();
 
-        /*  RyFieldsets have two atributes:
+        /*  Fieldsets have two atributes:
                 String name;
                 List<String> fields;
 
-            The fields list doesn't actually store RyFields but merely the keys to RyFields
+            The fields list doesn't actually store RyForm.Fields but merely the keys to RyForm.Fields
             (their names).  Any fields that aren't added to a fieldset are just rendered 
             at the top of the form like they normally would.
 
@@ -426,12 +426,12 @@ public class RyFormReadmeTest {
 
         RyForm form = new RyForm();
 
-        RyField name = new RyField();
+        RyForm.Field name = new RyForm.Field();
         name.name = 'Name';
         name.label = 'Name';
         form.addField(name);
 
-        RyField description = new RyField();
+        RyForm.Field description = new RyForm.Field();
         description.name = 'desc';
         description.label = 'Description';
         form.addField(description);
@@ -446,7 +446,7 @@ public class RyFormReadmeTest {
 
         // Add the fields we want to set:
 
-        model.addNode(new RyModel.SchemaNode('Name'));
+        model.addNode(new RySchema.Node('Name'));
 
         /*  Now, in this case, the fields on our form could match the fields on the 
             SObject but sometimes it may not be trivial to have the field names exactly
@@ -455,7 +455,7 @@ public class RyFormReadmeTest {
             a different field on the form like so:
         */
 
-        model.addNode('desc', new RyModel.SchemaNode('Description'));
+        model.addNode('desc', new RySchema.Node('Description'));
 
         // Add the model to the form (notice that this is a list yes you can have multiple models
         // per form):

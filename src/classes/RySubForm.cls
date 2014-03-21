@@ -1,6 +1,6 @@
 public class RySubForm extends RyForm {
 
-    public RyField parentField { get; set; }
+    public RyForm.Field parentField { get; set; }
 
     public String namespace {
         get {

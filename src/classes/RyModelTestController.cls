@@ -22,23 +22,23 @@ public with sharing class RyModelTestController {
         form = RyFormParser.parse(form_definition.Schema__c);
         form.params = params;
         
-        RyField list_field = new RyField();
+        RyForm.Field list_field = new RyForm.Field();
         list_field.name = 'list';
         list_field.label = 'People';
 
         RySubForm list_form = new RySubForm();
 
-        RyField sub_field = new RyField();
+        RyForm.Field sub_field = new RyForm.Field();
         sub_field.name = 'person';
         sub_field.label = 'Person';
         list_form.addField(sub_field);
 
-        RyField sub_field2 = new RyField();
+        RyForm.Field sub_field2 = new RyForm.Field();
         sub_field2.name = 'age';
         sub_field2.label = 'Age';
         list_form.addField(sub_field2);
 
-        RyField sub_field3 = new RyField();
+        RyForm.Field sub_field3 = new RyForm.Field();
         sub_field3.name = 'bio';
         sub_field3.label = 'Bio';
         sub_field3.widget = new RyWidget.Text();

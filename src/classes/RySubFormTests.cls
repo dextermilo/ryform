@@ -8,7 +8,7 @@ public class RySubFormTests {
 
         RySubForm subform = new RySubForm();
 
-        RyField fld = new RyField();
+        RyForm.Field fld = new RyForm.Field();
         fld.name = 'test';
 
         system.assertEquals('', subform.namespace);

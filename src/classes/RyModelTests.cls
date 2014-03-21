@@ -5,17 +5,17 @@ public class RyModelTests {
     @isTest
     static void test_schemaNode() {
         
-        RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
+        RySchema.Node node = new RySchema.Node('Name');
         //system.assert(node.type_from_sObject);
         
-        RyModel.SchemaNode node2 = new RyModel.SchemaNode();
+        RySchema.Node node2 = new RySchema.Node();
         //system.assert(node.type_from_sObject);
     }
 
     @isTest
     static void test_setup_validator() {
 
-        RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
+        RySchema.Node node = new RySchema.Node('Name');
         node.required = true;
 
         Boolean req = false;
@@ -68,7 +68,7 @@ public class RyModelTests {
 
     @isTest
     static void test_validate() {
-        RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
+        RySchema.Node node = new RySchema.Node('Name');
 
         node.setupValidators();
 
@@ -88,8 +88,8 @@ public class RyModelTests {
     @isTest
     static void test_modelSchema() {
         
-        RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
-        RyModel.SchemaNode node2 = new RyModel.SchemaNode('Description');
+        RySchema.Node node = new RySchema.Node('Name');
+        RySchema.Node node2 = new RySchema.Node('Description');
         
         RyModel.ModelSchema model = new RyModel.ModelSchema();
         
@@ -98,7 +98,7 @@ public class RyModelTests {
         model.addNode('AccoundId');
         model.addNode('sf_id', 'Id');
         
-        Map<String, RyModel.SchemaNode> nodes = model.getNodes();
+        Map<String, RySchema.Node> nodes = model.getNodes();
         
         system.assert(nodes.containsKey('Name'));
         system.assert(nodes.containsKey('text'));
@@ -157,10 +157,10 @@ public class RyModelTests {
     @isTest
     static void test_processModel() {
         
-        RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
-        RyModel.SchemaNode node2 = new RyModel.SchemaNode('Description');
-        RyModel.SchemaNode node3 = new RyModel.SchemaNode('NumberOfEmployees');
-        RyModel.SchemaNode node4 = new RyModel.SchemaNode('Id');
+        RySchema.Node node = new RySchema.Node('Name');
+        RySchema.Node node2 = new RySchema.Node('Description');
+        RySchema.Node node3 = new RySchema.Node('NumberOfEmployees');
+        RySchema.Node node4 = new RySchema.Node('Id');
         
         RyModel.ModelSchema model = new RyModel.ModelSchema();
 
@@ -251,10 +251,10 @@ public class RyModelTests {
     @isTest
     static void test_process_objectmap() {
 
-        RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
-        RyModel.SchemaNode node2 = new RyModel.SchemaNode('Description');
-        RyModel.SchemaNode node3 = new RyModel.SchemaNode('NumberOfEmployees');
-        RyModel.SchemaNode node4 = new RyModel.SchemaNode('Id');
+        RySchema.Node node = new RySchema.Node('Name');
+        RySchema.Node node2 = new RySchema.Node('Description');
+        RySchema.Node node3 = new RySchema.Node('NumberOfEmployees');
+        RySchema.Node node4 = new RySchema.Node('Id');
         
         RyModel.ModelSchema model = new RyModel.ModelSchema();
 
@@ -281,9 +281,9 @@ public class RyModelTests {
     @isTest
     static void test_getObjQuery() {
 
-        RyModel.SchemaNode node = new RyModel.SchemaNode('Name');
-        RyModel.SchemaNode node2 = new RyModel.SchemaNode('Description');
-        RyModel.SchemaNode node3 = new RyModel.SchemaNode('NumberOfEmployees');
+        RySchema.Node node = new RySchema.Node('Name');
+        RySchema.Node node2 = new RySchema.Node('Description');
+        RySchema.Node node3 = new RySchema.Node('NumberOfEmployees');
         
         RyModel.ModelSchema model = new RyModel.ModelSchema();
 

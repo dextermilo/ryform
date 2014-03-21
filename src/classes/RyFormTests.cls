@@ -6,7 +6,7 @@ public class RyFormTests {
     private static RyForm setupTestForm() {
         RyForm form = new RyForm();
         
-        RyField field = new RyField();
+        RyForm.Field field = new RyForm.Field();
         field.name = 'spam';
         field.label = 'Test';
         field.description = 'A test field.';
@@ -14,7 +14,7 @@ public class RyFormTests {
         field.validator = 'isURL';
         field.max = 40;
         
-        RyField field2 = new RyField();
+        RyForm.Field field2 = new RyForm.Field();
         field2.name = 'number';
         field2.label = 'Number';
         field2.dataType = 'number';
@@ -29,7 +29,7 @@ public class RyFormTests {
 
         RyModel.ModelSchema model = new RyModel.ModelSchema();
         model.sfObject = 'Account';
-        model.addNode('spam', new RyModel.SchemaNode('Name'));
+        model.addNode('spam', new RySchema.Node('Name'));
 
         form.models.add(model);
 
@@ -50,7 +50,7 @@ public class RyFormTests {
         Boolean num = false;
         Boolean man = false;
         
-        for (RyField fld : form.fields) {
+        for (RyForm.Field fld : form.fields) {
             for (RyValidator.Base v : fld.ryValidators) {
                 if (v.cssClass == 'required') req = true;
                 if (v.cssClass == 'number') num = true;
@@ -112,18 +112,18 @@ public class RyFormTests {
     static void test_fieldsets() {
         RyForm form = setupTestForm();
 
-        RyForm.RyFieldset fieldset_no_name = new RyForm.RyFieldset();
+        RyForm.Fieldset fieldset_no_name = new RyForm.Fieldset();
         fieldset_no_name.fields.add('number');
 
         form.fieldsets.add(fieldset_no_name);
 
-        RyForm.RyFieldset fieldset_with_name = new RyForm.RyFieldset();
+        RyForm.Fieldset fieldset_with_name = new RyForm.Fieldset();
         fieldset_with_name.name = 'Food';
         fieldset_with_name.fields.add('spam');
 
         form.fieldsets.add(fieldset_with_name);
 
-        form.fieldsets.add(new RyForm.RyFieldset());
+        form.fieldsets.add(new RyForm.Fieldset());
 
         form.setup();
 

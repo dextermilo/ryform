@@ -97,11 +97,11 @@ public virtual class RyForm {
     }
 
     // Basic class for fieldsets
-    public class RyFieldset {
+    public class Fieldset {
         public String name { get; set; }
         public List<String> fields { get; set; }
 
-        public RyFieldset() {
+        public Fieldset() {
             fields = new List<String>();
         }
     }
@@ -120,7 +120,7 @@ public virtual class RyForm {
     }
 
     // Fieldsets, right now implemented as List<String> of List<String>
-    public List<RyFieldset> fieldsets { get; set; }
+    public List<Fieldset> fieldsets { get; set; }
     
     // Map of parameters, i.e. raw form input values, that are passed into the form
     public Map<String, String> params { get; set; }
@@ -161,7 +161,7 @@ public virtual class RyForm {
         if (errors == null) errors = new Map<String, String>();
         if (models == null) models = new List<RyModel.ModelSchema>();
         if (params == null) params = new Map<String, String>();
-        if (fieldsets == null) fieldsets = new List<RyFieldset>();
+        if (fieldsets == null) fieldsets = new List<Fieldset>();
         if (namespace == null) namespace = '';
         if (suffix == null) suffix = '';
     }
@@ -289,7 +289,7 @@ public virtual class RyForm {
         // Fieldsets
         if (!fieldsets.isEmpty() && !fields.isEmpty()) {
 
-            for (RyFieldset fieldset : fieldsets) {
+            for (Fieldset fieldset : fieldsets) {
 
                 if (fieldset.fields.isEmpty()) {
                     continue;

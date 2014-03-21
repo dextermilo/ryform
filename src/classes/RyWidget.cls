@@ -27,7 +27,7 @@ public class RyWidget {
 
         public String type;
         
-        public RyField field;
+        public RyForm.Field field;
         
         public RySubForm schema { Get; Set; }
 
@@ -253,7 +253,7 @@ public class RyWidget {
             String output = (this.field.error != null ? '<p class="help-inline">'+this.field.error+'</p>' : '')+'<div class="well ryform-sub"><div class="ryform-sub-group hide"><a class="close" href="#">x</a>';
 
             if (this.schema != null) {
-                for (RyField field : this.schema.fields) {
+                for (RyForm.Field field : this.schema.fields) {
                     output += +field.render();
                 }
             }

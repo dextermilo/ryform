@@ -7,7 +7,7 @@ public class RyFormParser {
         Ryform form = (RyForm)parser.readValueAs(formClass);
 
         if (form.fields != null) {
-            for (RyField field : form.fields) {
+            for (RyForm.Field field : form.fields) {
                 field.setupWidget();
                 field.setup();
             }
