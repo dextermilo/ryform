@@ -43,7 +43,7 @@ public abstract class RyValidator {
         public override Boolean check(Object value, Map<String, Object> params) {
             if (value instanceOf Integer) {
                 return true;
-            } else if (value instanceOf String) {
+            } else {
                 String strValue = String.valueOf(value);
                 Pattern r = pattern.compile('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
                 Matcher m = r.matcher(strValue);

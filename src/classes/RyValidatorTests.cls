@@ -42,8 +42,12 @@ public class RyValidatorTests {
         String error = v.validate('abc', params);
         system.assertNotEquals(error, null);
         
-        // Validate with a number, pass
+        // Validate with a number as string, pass
         error = v.validate('23', params);
+        system.assertEquals(error, null);
+
+        // Validate with an integer, pass
+        error = v.validate(23, params);
         system.assertEquals(error, null);
     }
     
