@@ -10,9 +10,9 @@ public class RyValidatorTests {
         Map<String, String> params = new Map<String, String>();
         
         v.setup();
-        v.validate('value', params);
+        String error = v.validate('value', params);
         
-        system.assert(v.valid);
+        system.assertEquals(error, null);
     }
     
     @isTest
@@ -24,14 +24,14 @@ public class RyValidatorTests {
         v.setup();
         
         // Validate with no value, fail
-        v.validate('', params);
+        String error = v.validate('', params);
         
-        system.assert(!v.valid);
+        system.assertNotEquals(error, null);
         
         // Validate with a value, pass
         v.validate('value', params);
         
-        system.assert(v.valid);
+        system.assertEquals(error, null);
     }
     
     @isTest
@@ -43,14 +43,14 @@ public class RyValidatorTests {
         v.setup();
         
         // Validate with non-number, fail
-        v.validate('abc', params);
+        String error = v.validate('abc', params);
         
-        system.assert(!v.valid);
+        system.assertNotEquals(error, null);
         
         // Validate with a number, pass
-        v.validate('23', params);
+        error = v.validate('23', params);
         
-        system.assert(v.valid);
+        system.assertEquals(error, null);
     }
     
     @isTest
@@ -62,14 +62,14 @@ public class RyValidatorTests {
         v.setup();
         
         // Validate with non-email, fail
-        v.validate('abc@cba@bogus.com', params);
+        String error = v.validate('abc@cba@bogus.com', params);
         
-        system.assert(!v.valid);
+        system.assertNotEquals(error, null);
         
         // Validate with an email, pass
-        v.validate('testmoney+123@gmail.com', params);
+        error = v.validate('testmoney+123@gmail.com', params);
         
-        system.assert(v.valid);
+        system.assertEquals(error, null);
     }
     
     @isTest
@@ -81,55 +81,44 @@ public class RyValidatorTests {
         v.setup();
         
         //Validate with slashes, pass
-        v.validate('5/5/2000', params);
-        
-        system.assert(v.valid);
+        String error = v.validate('5/5/2000', params);
+        system.assertEquals(error, null);
         
         //Validate with dashes, fail
-        v.validate('5-5-2000', params);
-        
-        system.assert(!v.valid);
+        error = v.validate('5-5-2000', params);
+        system.assertNotEquals(error, null);
         
         //Validate with yyyy/mm/dd format, fail
-        v.validate('2000-5-5', params);
-        
-        system.assert(!v.valid);
+        error = v.validate('2000-5-5', params);
+        system.assertNotEquals(error, null);
         
         //Validate with bad month value, yyyy/mm/dd, fail
-        v.validate('2000-30-5', params);
-        
-        system.assert(!v.valid);
+        error = v.validate('2000-30-5', params);
+        system.assertNotEquals(error, null);
         
         //Validate with chars, fail
-        v.validate('THIS IS NOT A DATE', params);
-    
-        system.assert(!v.valid);
+        error = v.validate('THIS IS NOT A DATE', params);
+        system.assertNotEquals(error, null);
         
         //Validate with dd/yyyy/mm, fail
-        v.validate('5-2000-5', params);
-        
-        system.assert(!v.valid);
+        error = v.validate('5-2000-5', params);
+        system.assertNotEquals(error, null);
         
         //Validate with excessive values for month, fail
-        v.validate('50-5-2000', params);
-        
-        system.assert(!v.valid);
+        error = v.validate('50-5-2000', params);
+        system.assertNotEquals(error, null);
         
         //Validate with excessive values for day, fail
-        v.validate('5-50-2000', params);
-        
-        system.assert(!v.valid);
+        error = v.validate('5-50-2000', params);
+        system.assertNotEquals(error, null);
         
         //Validate with excessive values for year, fail
-        v.validate('5-5-20000', params);
-        
-        system.assert(!v.valid);
+        error = v.validate('5-5-20000', params);
+        system.assertNotEquals(error, null);
         
         //Validate with abbreviated year, fail
-        v.validate('5-5-12', params);
-        
-        system.assert(!v.valid);
-                
+        error = v.validate('5-5-12', params);
+        system.assertNotEquals(error, null);
     }
         
     
@@ -143,14 +132,12 @@ public class RyValidatorTests {
         v.setup();
         
         // fail
-        v.validate('funny.nothing', params);
-        
-        system.assert(!v.valid);
+        String error = v.validate('funny.nothing', params);
+        system.assertNotEquals(error, null);
         
         // pass
-        v.validate('http://www.google.com', params);
-        
-        system.assert(v.valid);
+        error = v.validate('http://www.google.com', params);
+        system.assertEquals(error, null);
     }
     
     @isTest
@@ -161,21 +148,21 @@ public class RyValidatorTests {
         
         // Validate without max set, pass
         v.max = null;
-        v.validate('12345678901', params);
-        system.assert(v.valid);
+        String error = v.validate('12345678901', params);
+        system.assertEquals(error, null);
         
         v.max = 10;
         v.setup();
         
         // fail
-        v.validate('12345678901', params);
+        error = v.validate('12345678901', params);
         
-        system.assert(!v.valid);
-        system.assert(v.message.contains(String.valueOf(v.max)));
+        system.assertNotEquals(error, null);
+        system.assert(error.contains(String.valueOf(v.max)));
         
         // pass
-        v.validate('123', params);
+        error = v.validate('123', params);
         
-        system.assert(v.valid);
+        system.assertEquals(error, null);
     }
 }

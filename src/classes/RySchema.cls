@@ -88,10 +88,10 @@ public abstract class RySchema {
         public virtual String validate(Map<String, String> params) {
             for (RyValidator.Base validator : this.ryValidators) {
                 // Run validator
-                validator.validate(this.currentValue, params);
-                if (!validator.valid) {
-                    this.error = validator.message;
-                    return this.error;
+                String error = validator.validate(this.currentValue, params);
+                if (error != null) {
+                    this.error = error;
+                    return error;
                 }
                     
             }

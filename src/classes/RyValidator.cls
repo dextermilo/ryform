@@ -4,12 +4,16 @@ public abstract class RyValidator {
         public String message;
         public integer max;
         
-        public virtual Boolean validate(String value, Map<String, String> params) {
-            return true;
+        /* Return null means validation passed */
+        public virtual String validate(String value, Map<String, String> params) {
+            if (this.check(value, params)) {
+                return this.message;
+            }
+            return null;
         }
 
-        public virtual Boolean validate(String value) {
-            return this.validate(value, new Map<String,String>());
+        public virtual Boolean check(String value, Map<String, String> params) {
+            return true;
         }
         
         public virtual void setup() {
@@ -20,7 +24,7 @@ public abstract class RyValidator {
     /* Required Field */
     public virtual class Required extends Base {
         
-        public override Boolean validate(String value, Map<String, String> params) {
+        public override Boolean check(String value, Map<String, String> params) {
             return value != null && value != '';
         }
         
@@ -33,10 +37,11 @@ public abstract class RyValidator {
     /* Is numeric */
     public virtual class isNumber extends Base {
         
-        public override Boolean validate(String value, Map<String, String> params) {
+        public override Boolean check(String value, Map<String, String> params) {
             Pattern r = pattern.compile('^-?(?:\\d+|\\d{1,3}(?:,\\d{3})+)?(?:\\.\\d+)?$');
             Matcher m = r.matcher(value);
-            return m.matches();
+
+            return !m.matches();
         }
         
         public override void setup() {
@@ -48,7 +53,7 @@ public abstract class RyValidator {
     /* Is Email */
     public virtual class isEmail extends Base {
         
-        public override Boolean validate(String value, Map<String, String> params) {
+        public override Boolean check(String value, Map<String, String> params) {
             Pattern r = pattern.compile('^[-a-z0-9~!$%^&*_=+}{\\\'?]+(\\.[-a-z0-9~!$%^&*_=+}{\\\'?]+)*@([a-z0-9_][-a-z0-9_]*(\\.[-a-z0-9_]+)*\\.(aero|arpa|biz|com|coop|edu|gov|info|int|mil|museum|name|net|org|pro|travel|mobi|[a-z][a-z])|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{1,5})?');
             Matcher m = r.matcher(value);
             return m.matches();
@@ -63,7 +68,7 @@ public abstract class RyValidator {
     /* Is URL */
     public virtual class isURL extends Base {
         
-        public override Boolean validate(String value, Map<String, String> params) {
+        public override Boolean check(String value, Map<String, String> params) {
             Pattern r = pattern.compile('^(https?|ftp|file)://[-A-Za-z0-9+&@#/%?=~_|!:,.;]*[-A-Za-z0-9+&@#/%=~_|]');
             Matcher m = r.matcher(value);
             return m.matches();
@@ -78,7 +83,7 @@ public abstract class RyValidator {
     /* Max length */
     public virtual class maxLength extends Base {
         
-        public override Boolean validate(String value, Map<String, String> params) {
+        public override Boolean check(String value, Map<String, String> params) {
             if (this.max != null) {
                 if (this.message == null) this.message = 'Please enter a value with less than '+String.valueOf(max) +' characters.';
                 return value.length() <= max;
@@ -96,7 +101,7 @@ public abstract class RyValidator {
     /* Is Date */
     public virtual class isDate extends Base {
         
-        public override Boolean validate(String value, Map<String, String> params) {
+        public override Boolean check(String value, Map<String, String> params) {
             if (value != null && value != '') {
                 try {
                     date d = date.parse(value);
