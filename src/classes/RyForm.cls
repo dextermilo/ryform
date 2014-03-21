@@ -125,17 +125,6 @@ public virtual class RyForm {
     // Map of parameters, i.e. raw form input values, that are passed into the form
     public Map<String, String> params { get; set; }
     
-    // Map of validators that should automatically be applied to fields of a certain type
-    public static Map<String, List<String>> dataTypeValidators {
-        get {
-            if (dataTypeValidators == null) {
-                dataTypeValidators = new Map<String, List<String>>();
-                dataTypeValidators.put('number', new List<String>{'isNumber'});
-            }
-            return dataTypeValidators;
-        }
-    }
-    
     // The list of fields on our form
     public List<RyForm.Field> fields { get; set; }
     

@@ -28,8 +28,6 @@ public class RyWidget {
         public String type;
         
         public RyForm.Field field;
-        
-        public RySubForm schema { Get; Set; }
 
         public List<String> values {
             get {
@@ -201,94 +199,4 @@ public class RyWidget {
         }
         
     }
-
-    /* Object list: use at your own peril */
-    public class ObjectList extends Base {
-
-        public override void setup() {
-            if (this.schema != null) {
-                this.schema.parentField = this.field;
-                this.schema.setup();
-            }
-        }
-
-        public override String extract(Map<String, String> params) {
-            
-            List<Map<String, String>> data = new List<Map<String, String>>();
-            if (params != null && params.size() > 0 && this.schema != null) {
-
-                List<String> keys = new List<String>();
-
-                if (!this.schema.fields.isEmpty()) {
-                    for (RyForm.Field field : this.schema.fields) {
-                        for (String key : params.keySet()) {
-                            if (key.startsWith(field.name) && key.contains('--')) {
-                                keys.add(key);
-                            }
-                        }
-                    }
-
-                    keys.sort();
-
-                    Integer i;
-                    for (String key : keys) {
-                        i = Integer.valueOf(key.substring(key.indexOf('--')+2, key.length()));
-                        while (data.isEmpty() || data.size() < i) {
-                            data.add(new Map<String,String>());
-                        }
-                        data[i-1].put(key, params.get(key));
-                    }
-                }
-
-                return JSON.serialize(data);
-
-            }
-            return '';
-
-        }
-
-        public override String render() {
-
-            String group_tmpl = '<div class="ryform-sub-group"><a class="close" href="#">x</a>##FIELDS##</div>';
-            String output = (this.field.error != null ? '<p class="help-inline">'+this.field.error+'</p>' : '')+'<div class="well ryform-sub"><div class="ryform-sub-group hide"><a class="close" href="#">x</a>';
-
-            if (this.schema != null) {
-                for (RyForm.Field field : this.schema.fields) {
-                    output += +field.render();
-                }
-            }
-
-            output += '</div>';
-            String val = this.renderValue();
-
-            if (val != null && val != '') {
-
-                if (val.contains('[')) {
-
-                    List<Map<String,String>> data;
-
-                    data = (List<Map<String,String>>)JSON.deserialize(val, List<Map<String,String>>.class);
-
-                    if (!data.isEmpty()) {
-                        Integer i = 1;
-                        for (Map<String,String> dat : data) {
-                            RySubForm tempSchema = this.schema;
-                            tempSchema.suffix = String.valueOf(i);
-                            tempSchema.params = dat;
-                            tempSchema.setup();
-                            output += group_tmpl.replace('##FIELDS##', tempSchema.render());
-                            i++;
-                        }
-                    }
-                }
-
-            }
-
-            output += '<a href="#" class="btn ryform-sub-add">Add</a></div>';
-            return output;
-
-        }
-
-    }
-    
 }
