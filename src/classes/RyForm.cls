@@ -46,7 +46,7 @@ public virtual class RyForm {
 
             if (this.widget == null) this.widget = new RyWidget.TextLine();
             
-            // TODO: this.widget.field = this;
+            this.widget.field = this;
             this.widget.setup();
         }
         
@@ -56,17 +56,6 @@ public virtual class RyForm {
         
         public String render() {
             return '<div class="form-group ryfield-'+this.renderedName+' '+(this.error != null && this.error != '' ? 'error' : '')+'"><label class="control-label" for="'+this.renderedName+'">'+this.label+(this.required ? '<span class="ryfield-required">*</span>' : '')+'</label><div class="controls">'+this.widget.render()+'</div></div>';
-        }
-        
-        public override void setupValidators() {
-            super.setupValidators();
-            this.widget.validatorCss = null;
-            
-            for (RyValidator.Base validator : this.ryValidators) {
-                if (validator.cssClass != null && validator.cssClass != '') {
-                    this.widget.validatorCss.add(validator.cssClass);
-                }
-            }
         }
 
         public override String validate(Map<String, String> params) {
@@ -91,7 +80,7 @@ public virtual class RyForm {
                 }
                 this.widget = (RyWidget.Base)parser.readValueAs(widget_class);
                 this.widget.setup();
-                // TODO: this.widget.field = this;
+                this.widget.field = this;
             }
         }
     }
@@ -106,6 +95,22 @@ public virtual class RyForm {
         }
     }
     
+    public Map<String, String> validatorCssClasses {
+        get {
+            if (validatorCssClasses == null) {
+                validatorCssClasses = new Map<String, String>{
+                    'Required' => 'required',
+                    'isNumber' => 'number',
+                    'isEmail' => 'email',
+                    'isURL' => 'url',
+                    'maxLength' => '',
+                    'isDate' => 'date'
+                };
+            }
+            return validatorCssClasses;
+        }
+        set;
+    }
     public List<RyModel.ModelSchema> models;
     public Boolean auto_model;
     public String sfObject;
