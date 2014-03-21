@@ -51,9 +51,7 @@ public abstract class RyModel {
         }
         
         public Boolean required { get; set; }
-        
         public String defaultValue { get; set; }
-        
         public String currentValue { get; set; }
         
         // Automatically assign validator from sObject
